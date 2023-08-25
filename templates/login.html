@@ -1,0 +1,68 @@
+
+<head>
+
+{% load static %}
+
+<script>
+    sessionStorage.setItem("timeleft",181);
+</script>
+
+</head>
+
+<body>
+{{message}}
+{{res}}
+<br><br>
+
+{{request.GET.username}}
+{{request.GET.password}}
+
+<form action="/login" method="GET">
+     
+    <input name="uname" placeholder="Enter user name" value="{{request.GET.username}}"><br><br>
+    <input name="upass" type="password" placeholder="Enter password" value="{{request.GET.password}}"><br><br>
+    <select name="subject">
+        <option value="gk">gk</option>
+        <option value="maths">maths</option>
+    </select>
+
+    <input type="submit" value="login"><br><br>
+    <input type="submit" value="testget" formaction="/test"><br><br>
+    <input type="submit" value="testpost" formaction="test/" formmethod="post"><br><br>
+    
+</form>
+
+<form>
+    <input type="submit" value="visitGoogle" formaction="/visitGoogle">
+    <a href="https://google.com">google</a>
+</form>
+
+<br>
+<a href="/showregister"> register here </a>
+
+<br><br><br>
+
+<img id="i1" height=500px  src="{% static 'images/image4.jpg' %}">
+
+<script>
+              //  0          1        2       3
+var imagess = ["image1","image2","image3","image4"];
+var currentIndex = -1;
+var img = document.getElementById("i1");
+function changeImage() 
+{
+    currentIndex++;// currentIndex=currentIndex+1
+    
+    if (currentIndex == imagess.length)
+        currentIndex = 0;
+
+    var nextImage="images/" + imagess[currentIndex]+".jpg";
+    console.log(nextImage);
+    img.src = "{% static nextImage %}" + nextImage ;
+}
+setInterval(changeImage,3000);
+</script>
+
+</body>
+
+{{result}}

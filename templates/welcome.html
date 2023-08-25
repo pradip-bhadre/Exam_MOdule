@@ -1,0 +1,144 @@
+
+<style>
+  td
+  {
+    padding: 15px 0;
+  }
+  input{
+    padding: 5px
+  }
+
+  #a
+  {
+	display:none;
+  }
+</style>
+<script>
+  
+
+var xmlhttp;
+
+	function getRemainingTime()
+	{
+		xmlhttp= new XMLHttpRequest();
+
+		xmlhttp.onload=showtime;
+		
+		xmlhttp.open("get","/getRemainingTime",true);
+		
+		xmlhttp.send();
+		
+	}
+
+	function showtime()
+	{
+		
+		//alert(xmlhttp.responseText);
+	                                 //145 "02:25"
+      var min1=Math.floor(xmlhttp.responseText / 60).toString().padStart(2,'0');
+      var sec1= (xmlhttp.responseText-min1*60).toString().padStart(2,'0');
+
+			document.myForm.show.value=min1 + ":"+sec1;
+			
+			if(xmlhttp.responseText==0)
+			{
+				alert("Time Up !!")
+				//xmlhttp.open("get","endexam",true);
+				window.location.href="/calculatescore";
+			}
+					
+		}
+
+	function displayTime()
+	{
+		sessionStorage.setItem("timeleft",parseInt(sessionStorage.getItem("timeleft"))-1);
+		var lefttime=parseInt(sessionStorage.getItem("timeleft"));
+		var min1=Math.floor(lefttime/60).toString().padStart(2,'0');
+        var sec1= (lefttime-min1*60).toString().padStart(2,'0');
+		document.myForm.show.value=min1 + ":" + sec1;
+	    if(lefttime==0)
+		{
+				alert("Time Up !!")
+				window.location.href="/calculatescore";
+		}
+	
+	}
+
+	setInterval(displayTime,1000);// 1000 ms - 1 sec  60000ms - 60sec
+
+function storeresponse()
+{
+	//alert("clicked");
+	 xhttp = new XMLHttpRequest();
+	  
+	  var submittedAnswer=document.myForm.op.value;//op is name of radio button
+	  var originalAnswer=document.myForm.a.value;// a is name of answer text box
+	  alert('original answer ' + originalAnswer);
+	  var qno=document.myForm.qno.value;// qno is name of text box where question number is shown
+	  var qtxt=document.myForm.q.value;// q is name of text box where question is shown
+	  alert('submitted answer ' + submittedAnswer);
+	  var data="?submittedAnswer=" + submittedAnswer + "&originalAnswer=" + originalAnswer + "&qno=" + qno + "&qtext=" + qtxt;
+	  xhttp.open("GET", "/storeresponse" + data, true);
+      xhttp.send();
+}
+
+function changeColor()
+	{
+		                        //  0      1   
+								//[span][span]
+								//[abc] [xyz]
+							
+		var allAnswers=document.getElementsByTagName("span");
+		var allradioButtons=document.getElementsByName("op");
+		var oldanswer=document.myForm.previousAnswer.value;
+
+		// comparing span element's innertext with previous answer 
+		for(var i=0;i<allAnswers.length;i++)
+		{
+			
+			//alert(allAnswers[i].innerText + " " + oldanswer);
+			if(allAnswers[i].innerText==oldanswer)
+			{
+				//alert("matched");
+        		allradioButtons[i].checked=true;
+				allAnswers[i].style.color='red';
+				break;
+			}
+			
+		}
+	}
+	
+		
+
+</script>
+
+<body onload="changeColor()">
+Welcome {{request.session.username}} 
+<a href="/logout">Logout</a>
+<br><br>
+
+<form name="myForm">
+    
+    remaining time :-  <input name="show" type="text" value="1 minutes"><br>
+    <br><br>
+
+    <input name="subject" type="text" value="{{question.subject}}"><br><br><br>
+    <input name="qno" type="text" value="{{question.qno}}" ><br><br><br>
+    <input name="q" type="text" id="q" value="{{question.qtext}}" size="70"><br><br><br>
+    <input name="a" type="text" id="a" value="{{question.qanswer}}"><br><br><br>
+    <input type="radio" name="op" id="op1" value="{{question.op1}}" onclick="storeresponse()">
+    <span id="o1" > {{question.op1}} </span><br><br><br>
+    <input type="radio" name="op" id="op2" value="{{question.op2}}" onclick="storeresponse()">
+    <span id="o2">{{question.op2}}</span><br><br><br>
+    previous answer is :-  {{previousAnswer}}
+    <br><br><br>
+    <input   type="text" name="previousAnswer" value="{{previousAnswer}}" ><br><br>
+       
+    <button type="submit" name="next" formaction="/next">Next</button>
+    <button type="submit" name="previous" formaction="/previous">Previous</button>
+    <button type="submit" name="calc"  value="sub" formaction="/calculatescore">End Exam</button>
+    <a href="score">Exit</a>
+        
+  </form>    
+
+  </body>

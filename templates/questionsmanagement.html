@@ -1,0 +1,67 @@
+<html>
+<head>
+	<script>
+
+var xmlhttp;
+function viewQuestion()
+			{
+				  
+					var qno=document.questionForm.qno.value;
+					var subject=document.questionForm.subject.value;
+					var data = "qno="+qno+"&subject="+subject;
+					xmlhttp= new XMLHttpRequest();
+					xmlhttp.onload=displayData;
+					xmlhttp.open("get","/viewQuestion?" + data);
+					xmlhttp.send();
+				
+			}
+
+			function displayData()
+			{
+				
+				var data=xmlhttp.responseText;
+				alert("JSON String from Server " + data)
+
+				var question=JSON.parse(data); 
+
+				// question==>{"qtext":"why","qanswer":"a","op1":"x","op2":"a"}
+
+				// parse() will convert json data into javascript's object
+
+				document.questionForm.qtext.value=question.qtext;
+				document.questionForm.qanswer.value=question.qanswer;
+				document.questionForm.op1.value=question.op1;
+				document.questionForm.op2.value=question.op2;
+
+			}
+	</script>
+</head>
+
+<body>
+<!-- document.questionForm.qno.value-->
+<form name="questionForm">
+
+	Qno:- <input type="text" name="qno" placeholder="Enter question number" required><br><br>
+	
+	Question :- <input type="text" name="qtext" placeholder="Enter question" value=""><br><br>
+		
+	Option1 :- <input type="text" name="op1" placeholder="Enter option"><br><br>
+	
+	Option2: <input type="text" name="op2" placeholder="Enter option"><br><br>
+				
+	Answer:- <input type="text" name="qanswer" placeholder="Enter Answer"><br><br>
+	
+	subject :- <input type="text" name="subject" placeholder="Enter subject"><br><br>
+		
+	<input type="submit" value="addQuestion" formaction="/saveQuestions">
+	<input type="button" value="viewQuestion" onclick="viewQuestion()">
+	<input type="submit" value="updateQuestion" formaction="/updateQuestion">
+	<input type="submit" value="deleteQuestion" formaction="/deleteQuestion">
+	
+</form>
+
+<span style="color:red"> {{message}} </span>
+
+</body>
+
+</html>

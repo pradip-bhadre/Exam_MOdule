@@ -1,0 +1,278 @@
+
+<html>
+    <head>
+       <title>questions</title> 
+       <style>
+
+.questioninfo
+{
+  display: block;
+  padding: 5px;
+  /*margin: auto;*/
+  margin-bottom: 10px;
+}
+
+body
+		{
+			background-color: grey;
+			
+		}
+		
+	#errorMessage
+	{
+		color:red;
+		font-size: 30px;
+		font-style: italic;
+		/*margin-left:500px;*/
+	}
+
+
+        .mymodal
+        {
+          display: none;
+          z-index: 1;
+          position: fixed;
+          left: 300px;
+          top:200px;
+          width:40%;
+          height:40%;
+          /*overflow: auto;*/
+          background-color: red;
+          /*border-radius: 50px;*/
+          
+        }
+
+        .mymodal-content
+        {
+          margin: 15% auto;
+          padding:20px;
+          border:1px solid magenta;
+          background-color: gray;
+         /* border-radius: 50px;*/
+        }
+
+        
+        #div3
+            {
+                /*text-align:center;*/
+                border:3px solid black;
+                width:600px;
+                margin-left:300px;
+                padding-top:10px;
+                padding-bottom:50px;
+               /* box-sizing:border-box;*/
+                
+            }
+
+            textarea
+            {
+                border:none;
+                font-size: 15px;
+                color:white;
+                background-color:black;
+                padding-top:5px;
+                box-sizing:border-box; 
+            }
+
+            .btn
+{
+			padding:15px 30px;
+			background-color: yellow;
+			color:green;
+			border-radius:10%;
+			font-size:20px;
+}	
+
+</style>
+
+
+<script>
+
+  var xmlhttp;
+  
+  function storeanswer()
+  {
+    var qno=document.questionsForm.qno.value;
+    var qtext=document.questionsForm.qtext.value;
+    var qanswer=document.questionsForm.qanswer.value;
+    var op=document.questionsForm.op.value;
+  
+    //alert(qno+" " + qtext + " " + qanswer+" "+ op)
+  
+    var data="?qno="+qno+"&qtext="+qtext+"&qanswer="+qanswer+"&op="+op;
+  
+    xmlhttp=new XMLHttpRequest();
+    xmlhttp.open('get','storeanswer'+data);
+    xmlhttp.send();
+  
+  }
+    
+  function display()
+        {
+          
+          if(document.getElementById("errormessage").innerHTML.length>0)
+          {
+            //alert("inside if")
+            var mymodal=document.getElementById("myModal");
+            mymodal.style.display="block";
+          }
+          else
+          {
+            var mymodal=document.getElementById("myModal");
+            mymodal.style.display="none";
+            
+          }
+        }
+  
+        function displayTime()
+        {
+          sessionStorage.setItem("timeleft",parseInt(sessionStorage.getItem("timeleft"))-1)
+        
+          var lefttime=sessionStorage.getItem("timeleft");
+  
+          var minute=Math.floor(lefttime/60).toString().padStart(2,'0');
+  
+          var second=(lefttime-(minute*60)).toString().padStart(2,'0');
+  
+          document.getElementById('timeleft').innerHTML=minute+":"+second;
+  
+          if(lefttime==0)
+          {
+            alert("time over");
+            window.location.href="answerschecking";
+          }
+          
+  
+        }
+  
+        setInterval(displayTime,1000);
+  
+        function check()
+        {
+          if(sessionStorage.getItem("timeleft")==null)
+          {
+            window.location.href="/";
+          }
+        }
+  
+  
+        function changeColor()
+        {
+          //alert("inside changeColor")
+          allspans=document.getElementsByName("answers");
+          allRadioButtons=document.getElementsByName("op");
+  
+          var previousAnswer=document.questionsForm.previousAnswer.value;
+  
+          for(var i=0;i<allspans.length;i++)
+          {
+            if(allspans[i].innerText==previousAnswer)
+            {
+              //alert("inside if")
+              allspans[i].style.color="magenta";
+              allRadioButtons[i].checked=true;
+              break;
+            }
+          }
+          
+        }
+  
+        function closeModal()
+        {
+            //alert("close() called")
+            var mymodal=document.getElementById("myModal");
+            mymodal.style.display="none";
+        }
+
+        function hideelements()
+        {
+            var hiddenelements=document.getElementsByClassName("hidden");
+
+            for(var i=0;i<hiddenelements.length;i++)
+            {
+              hiddenelements[i].style.display='none';
+            }
+        }
+
+  addEventListener("load",check);
+  addEventListener("load",changeColor);
+  addEventListener("load",display);
+  addEventListener("load",hideelements);
+
+  </script>
+
+ 
+</head>
+
+{% load static %}
+
+  <body>
+
+  <div id="myModal" class="mymodal">
+
+    <h1 style="color:aquamarine;text-align: center;">Alert</h1>
+    
+    <div class="mymodal-content">
+
+      <h2 style="color: brown;text-align: center;">Questions over</h2><br><br>
+
+      <input type="button" value="close" onclick="closeModal()">
+    
+    </div>
+
+  </div>
+      
+  
+<img src="{% static request.session.imagepath %}" width="100px" height="100px">
+
+      <!--  <span> selected subject {{request.GET.subject}}</span>-->
+        <span style="color:red;font-size: large;">welcome user {{request.session.username}}</span>
+        {{question}} 
+
+        <br><br>
+    Remainiting time &nbsp;&nbsp; <span id="timeleft"></span> <br><br>
+    Total Questions &nbsp;&nbsp; <span style="color:red">{{totalquestions}}</span> <br><br>
+    Attempted Questions &nbsp;&nbsp; <span style="color:red">{{attemptedquestions}}</span><br><br>
+    Remaining Questions &nbsp;&nbsp; <span style="color:red">{{remainingquestions}}</span> <br><br>
+      
+<div id="div3">
+
+<form name="questionsForm">
+    
+    <input class="questioninfo" name="subject" type="text" value="{{question.subject}}">
+    
+    <input class="questioninfo" name="qno" type="text" value="{{question.qno}}" >
+        
+	<textarea  rows=3 cols=50 name="qtext" readonly> {{question.qtext}} </textarea>
+	
+   <!-- <input class="questioninfo" name="qtext" type="text" id="q" value="{{question.qtext}}"> -->
+    
+    <input  name="qanswer"  id="a" value="{{question.qanswer}}">
+  
+    <div class="questioninfo">
+
+    <input type="radio" name="op" id="op1" value="{{question.op1}}" onclick="storeanswer()">
+    <span name="answers">{{question.op1}}</span>
+  
+    </div>
+
+   <div class="questioninfo"> 
+    <input  type="radio" name="op" id="op2" value="{{question.op2}}" onclick="storeanswer()">
+    <span name="answers">{{question.op2}}</span>
+  </div>
+
+    <input class="hidden" name="previousAnswer" value="{{previousAnswer}}">
+
+    <input type="submit" value="next" formaction="next" class="btn"> 
+    <input type="submit" value="previous" formaction="previousQuestion" class="btn">
+    <input type="submit" value="end exam" formaction="answerschecking" class="btn">
+<br>
+    <span id="errormessage">{{errormessage}}</span>
+
+  </form>    
+
+</div>  
+  
+  </body>
+    
+</html>

@@ -1,0 +1,100 @@
+<html>
+<head>
+    
+    {% load static %}
+
+    <title>score page</title>
+    <style>
+        
+    table,td,th
+    {
+        border:1px solid grey
+    }
+
+
+    th
+    {
+        color:blue;
+    }
+    td
+    {
+        color:brown;
+    }
+    td,th
+    {
+        padding: 10px;
+    }
+
+    </style>
+
+    <script>
+        function removeSessionItem()
+        {
+            sessionStorage.removeItem('timeleft');
+        }
+    </script>
+</head>
+
+<body onload="removeSessionItem()">
+
+<form>
+
+    <span>welcome user {{request.session.username}}</span><br><br><br>
+
+<span style="color: blue; font-size: x-large;"> final score is {{finalscore}} </span>
+
+<p>{{allanswers}}</p>
+
+<table>
+    <tr>
+        <th>qno</th>
+        <th>question</th>
+        <th>correct answer</th>
+        <th>submitted answer</th>
+        
+    </tr>
+
+    {% for answer in allanswers %}
+            <tr>
+                    <td>{{answer.0}}</td>
+                    <td>{{answer.1}}</td>
+                    <td>{{answer.2}}</td>
+                    <td>{{answer.3}}</td>
+
+            </tr>
+    {% endfor%}
+
+</table>
+
+
+</form>
+
+
+<br><br><br>
+
+<img id="i1" height=500px  src="{% static 'images/image4.jpg' %}">
+
+<script>
+              //  0          1        2       3
+var imagess = ["image1","image2","image3","image4"];
+var currentIndex = -1;
+var img = document.getElementById("i1");
+function changeImage() 
+{
+    currentIndex++;// currentIndex=currentIndex+1
+    
+    if (currentIndex == imagess.length)
+        currentIndex = 0;
+// images/image4.jpg
+    var nextImage='images/' + imagess[currentIndex]+'.jpg';
+    console.log(nextImage);
+    img.src = "{% static nextImage %}" + nextImage;
+}
+
+setInterval(changeImage,3000);
+
+</script>
+
+</body>
+
+</html>

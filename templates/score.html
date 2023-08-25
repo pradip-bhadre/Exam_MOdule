@@ -1,0 +1,90 @@
+
+<html>
+<head>
+       <script>
+
+        function gotohome()
+        {
+            var username=document.getElementById("username").innerHTML;
+            var password=document.getElementById("password").innerHTML;
+            var data="username="+username+"&password="+password;
+
+            window.location.href="/?"+data;     
+        }
+       </script> 
+<style>
+
+    div
+    {
+        margin-left: 300px;
+    }
+
+    table,td,th
+    {
+        border:1px solid grey
+    }
+    
+    a
+    {
+        text-decoration: none;
+        padding:5px;
+        border-radius: 50px;
+        border: 1px solid magenta;
+    }
+
+    th
+    {
+        color:blue;
+    }
+    td
+    {
+        color:brown;
+    }
+    td,th
+    {
+        padding: 10px;
+    }
+
+    #score
+    {
+        color:red;
+        font-size:30px;
+        margin-bottom: 100px;
+        margin-left: 500px;
+    }
+</style>
+</head>
+<span id="score"> Your score is {{score}} </span>
+<tr><tr>
+<div>
+<table>  
+    <head >  
+    <tr>  
+        <th>Q No</th>
+        <th>Question</th>
+        <th>Correct Answer</th>
+        <th>Your Answer</th>
+    </tr>  
+    </head>  
+    <body>  
+
+{% for list in responses %}  
+    <tr>  
+        <td> {{list.0}} </td>  
+        <td> {{list.1}} </td>  
+        <td> {{list.2}} </td>  
+        <td> {{list.3}} </td>  
+              
+    </tr>  
+{% endfor %} 
+ 
+    </body>  
+</table> 
+</div>
+<h1>Click below to give exam on another subject</h1>
+<span id="username">{{username}}</span>
+<span id="password">{{password}}</span>
+
+<a onclick="gotohome()">Go</a>
+
+</html>

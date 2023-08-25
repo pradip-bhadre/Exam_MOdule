@@ -1,0 +1,118 @@
+<html>
+	<head>
+<style>
+    span
+    {
+        color: red;
+    }
+
+	#div2
+		{
+			text-align:center;
+			border:3px solid black;
+			width:500px;
+			margin:auto;
+			padding-top:100px;
+			padding-bottom:50px;
+			box-sizing:border-box;
+		}
+		input
+		{
+			padding:15px;
+		}
+		
+		input[type="submit"],input[type="password"]
+		{
+			padding:15px 20px;
+			color:red;
+			background-color:yellow;
+			border-radius:10%;
+		}
+
+
+</style>
+<script>
+            var xmlhttp;
+
+function check()
+			{
+					var username=document.registerForm.username.value;
+									
+					var data = "username="+username;
+
+					xmlhttp= new XMLHttpRequest();
+
+					xmlhttp.onload=displayData;
+
+					xmlhttp.open("get","/checkUsername?" + data);
+				
+					xmlhttp.send();
+				
+			}
+
+			function displayData()
+			{
+				
+				var data=xmlhttp.responseText;
+				//alert("JSON String from Server " + data)
+
+				var obj=JSON.parse(data); 
+				// parse() will convert json data into javascript's object
+                //alert(obj.message);{"message":"username already present"}
+				
+				document.getElementById("show").innerHTML=obj.message;
+
+			}
+		
+			function change()
+			{
+				
+		    	   this.style.color="white";
+		       	   this.style.background="black";
+				
+	        }
+
+function load()
+{
+// [ input1 , input2,input3,input4 ] inputelements
+//    0        1      2      3
+
+ var inputelements= document.getElementsByTagName("input");
+
+ for (let index = 0; index < inputelements.length-1; index++) 
+ {
+
+	inputelements[index].addEventListener("focus",change);
+ 	
+ }
+
+}
+
+
+   
+</script>
+
+</head>
+
+<body onload="load()">
+
+<div id="div2">
+
+<form action="/register" method="GET" name="registerForm">
+
+    <span id="show">checking</span><br><br>
+    <input  type="text" name="username" value="{{username}}" placeholder="Enter user name" ><br><br>
+
+    <input  type="password" name="password" value="{{password}}" placeholder="Enter password"><br><br>
+
+    <input  type="text" name="mobno"  value="{{mobno}}" placeholder="Enter mobilenumber"><br><br>
+
+    <input type="submit" value="register">
+</form>
+
+</div>
+
+{{message}}
+
+</body>
+</html>

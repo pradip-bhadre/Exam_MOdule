@@ -1,0 +1,83 @@
+
+<html>
+
+<head>
+    <script>
+        sessionStorage.setItem("timeleft","61")
+    </script>
+        {% load static %}
+
+</head>
+
+<style>
+    #div2
+    {
+        border: 1px solid  black;
+        padding:50px 20px;
+        text-align: center;
+        width:400px;
+        height:330px;
+        margin:auto;
+        box-sizing: border-box;
+        margin-top: 20px;
+        background-color: brown;
+    }
+
+    a
+    {
+        text-decoration: none;
+       
+    }
+    .userinfo
+    {
+        padding:10px;
+        background-color:aqua;
+        color:green;
+        font-size: larger;
+    }
+
+    body
+    {
+        background-color: darkgray;
+    }
+    
+    input[type="submit"] ,a
+            {
+                padding:15px 20px;
+                color:red;
+                background-color:yellow;
+                border-radius:10%;
+                font-size: medium;
+            }
+    
+</style>
+
+<body>
+
+
+<div style="color:red;text-align: center;padding: 30px; font-size: 50px;"><marquee>{{message}}</marquee></div> <br><br><br>
+
+<div id="div2">
+
+<form action="/logins" method="GET">
+     
+    <input class="userinfo" name="uname" placeholder="Enter user name" value="{{name}}"><br><br>
+    <input class="userinfo" name="upass" type="password" placeholder="Enter password" value="{{password}}"><br><br>
+    <span style="color:white"> Choose Subject</span>
+    <select class="userinfo" name="subject">
+        <option value="gk">gk</option>
+        <option value="maths">maths</option>
+        <option value="maths">science</option>
+    </select>
+<br><br><br>
+    <input type="submit" value="login">&nbsp;&nbsp;
+
+    <a href="showregister">sign up</a> <br><br>
+      
+</form>
+
+<div>
+
+</body>
+
+</html>
